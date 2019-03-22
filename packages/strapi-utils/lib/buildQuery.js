@@ -32,11 +32,12 @@ const buildQuery = ({ model, filters, ...rest }) => {
   if (filters.where && Array.isArray(filters.where)) {
     filters.where.forEach(whereClause => {
       if (!validator(whereClause)) {
-        throw new Error(
-          `Your filters contain a field "${
-            whereClause.field
-          }" that doesn't appear on your model definition nor it's relations`
+        const err = new Error(
+          `Your filters contain a field '${whereClause.field}' that doesn't appear on your model definition nor it's relations`
         );
+
+        err.status = 400;
+        throw err;
       }
     });
   }
